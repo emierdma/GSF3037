@@ -1,0 +1,29 @@
+#!/bin/bash
+#create a .json file (on text editor Pluma) with the following contents (I saved it as GSF3037-N2rep1.json):
+{
+	"samples_path": "/N/slate/emierdma/GSF3037/flare",
+	"samples": [ 
+	"GSF3037-EE-N2_rep1_Aligned.sortedByCoord.out.bam"
+	],
+	"reverse_stranded": true,
+	"reference_fasta": "/N/slate/emierdma/GSF3037/genome/assembly.fasta",
+	"known_snps": "/N/slate/emierdma/GSF3037/flare/c.elegans.WS275.snps.nostrand.sorted.bed",
+	"edit_type": "AG", 
+	"output_dir": "/N/slate/emierdma/GSF3037/results/flare_results"
+}
+
+#in flare directory
+#load "rnaseq" conda environment
+module load conda
+conda activate rnaseq
+
+#load singularity every single time you run 
+module load singularity
+
+#use the following command to run SAILOR. under "--singularity-args --'bind' you will have to give access to every single directory that has relevant files
+snakemake --snakefile /N/slate/emierdma/GSF3037/flare/workflow_sailor/Snakefile --configfile /N/slate/emierdma/GSF3037/flare/GSF3037-N2rep1.json --use-singularity --singularity-args '--bind /N/slate/emierdma/GSF3037 --bind /N/slate/emierdma/GSF3037/genome --bind /N/slate/emierdma/GSF3037/flare/workflow_sailor/scripts --bind /N/slate/emierdma/GSF3037/flare/workflow_sailor --bind /N/slate/emierdma/GSF3037/results/flare_results' -j1
+
+#editing site annotation
+#in "annotation" conda environment (must have python==3.8.6, pybedtools, pandas)
+#must have annotation .bed file, geneset .gtf file, annotator.sailor.py, .bed files from flare_results directory (directory 7)
+python3 annotator.sailor.py --gtf c_elegans.PRJNA13758.WS275.canonical_geneset.gtf --fwd GSF3037-EE-N2_rep1_Aligned.sortedByCoord.out.bam.fwd.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed --rev GSF3037-EE-N2_rep1_Aligned.sortedByCoord.out.bam.rev.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed --wb c.elegans.WS275.annotation.final.bed --o /N/slate/emierdma/GSF3037/results/flare_results/N2_rep1.annotated.sites.csv
