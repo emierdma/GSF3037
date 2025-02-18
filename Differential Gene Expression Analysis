@@ -42,6 +42,6 @@ write.csv(resdata,file="/N/slate/emierdma/GSF3037/results/N2_vs_adr2_deseq.csv")
 # move file to desktop
 # in terminal (outside thinlinc)
 
-scp emierdma@carbonate.uits.iu.edu:/N/slate/emierdma/GSF3587/results/N2_vs_adr2_deseq.csv ~/Desktop
+scp emierdma@carbonate.uits.iu.edu:/N/slate/emierdma/GSF3037/results/N2_vs_adr2_deseq.csv ~/Desktop
 
 # open file in Excel and analyze
